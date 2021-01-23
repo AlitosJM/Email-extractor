@@ -59,6 +59,7 @@ def main():
 
     elif choice == "Bulk Extractor":
         st.subheader("Bulk Extractor")
+        text = st.text_area("Paste Text Here")
     else:
         st.subheader("About")
 
