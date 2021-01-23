@@ -32,6 +32,7 @@ def main():
     st.title("Email Extractor")
 
     menu = ["Home", "Sigle Extractor", "Bulk Extractor", "About"]
+    list_of_items = ["Emails", "URLS", "Phonenumbers"]
     choice = st.sidebar.selectbox("Menu", menu)
 
     if choice == "Home":
@@ -39,7 +40,6 @@ def main():
     elif choice == "Sigle Extractor":
         st.subheader("Extract A Single Term")
         text = st.text_area("Paste Text Here")
-        list_of_items = ["Emails", "URLS", "Phonenumbers"]
         task_option = st.sidebar.selectbox("Task", list_of_items)
 
         if st.button("Extract"):
@@ -52,7 +52,7 @@ def main():
 
             st.write(results)
 
-            with st.beta_expander("Results As Dataframe"):
+            with st.beta_expander("Results As DataFrame"):
                 result_df = pd.DataFrame({"Results": results})
                 st.dataframe(result_df)
                 make_downloadable(result_df, task_option)
@@ -60,6 +60,24 @@ def main():
     elif choice == "Bulk Extractor":
         st.subheader("Bulk Extractor")
         text = st.text_area("Paste Text Here")
+        task_option = st.sidebar.multiselect("Task", list_of_items, default="Emails")
+        task_mapper = {list_of_items[0]: nfx.extract_emails(
+            text), list_of_items[1]: nfx.extract_urls(text),
+            list_of_items[2]: nfx.extract_phone_numbers(text)}
+
+        all_result = []
+        for task in task_option:
+            result = task_mapper[task]
+            # st.write(result)
+            all_result.append(result)
+
+        st.write(all_result)
+
+        with st.beta_expander("Results As DataFrame"):
+            result_df = pd.DataFrame(all_result).T
+            result_df.columns = task_option
+            st.dataframe(result_df)
+            make_downloadable_df(result_df)
     else:
         st.subheader("About")
 
