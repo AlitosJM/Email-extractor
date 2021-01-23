@@ -1,5 +1,5 @@
 import streamlit as st
-import streamlit.components.v1 as static
+import streamlit.components.v1 as stc
 import pandas as pd
 import neattext.functions as nfx
 import base64
@@ -42,7 +42,29 @@ def main():
                              "charter.net", "yahoo.ca", "yahoo.com.au", "rambler.ru", "hotmail.de", "tiscali.it", "shaw.ca", "yahoo.co.jp", "sky.com", "earthlink.net", "optonline.net", "freenet.de", "t-online.de", "aliceadsl.fr", "virgilio.it", "home.nl", "qq.com", "telenet.be", "me.com", "yahoo.com.ar", "tiscali.co.uk", "yahoo.com.mx", "voila.fr", "gmx.net", "mail.com", "planet.nl", "tin.it", "live.it", "ntlworld.com", "arcor.de", "yahoo.co.id", "frontiernet.net", "hetnet.nl", "live.com.au", "yahoo.com.sg", "zonnet.nl", "club-internet.fr", "juno.com", "optusnet.com.au", "blueyonder.co.uk", "bluewin.ch", "skynet.be", "sympatico.ca", "windstream.net", "mac.com", "centurytel.net", "chello.nl", "live.ca", "aim.com", "bigpond.net.au"]
 
     st.title("Email Extractor")
+    custom_banner = """
+    <div style="font-size:30px;font-weight:bolder;background-color:#fff;padding:10px;border-radius:10px;border:5px solid #464e5f;text-align:center;">
 
+
+    <span style="color:blue">E</span>
+    <span style="color:black">M</span>
+    <span style="color:red">A</span>
+    <span style="color:green">I</span>
+    <span style="color:purple">L</span>
+
+    <span style="color:blue">E</span>
+    <span style="color:red">X</span>
+    <span style="color:yellow">T</span>
+    <span style="color:#464e5f">R</span>
+    <span style="color:red">A</span>
+    <span style="color:green">C</span>
+    <span style="color:yellow">T</span>
+    <span style="color:black">O</span>
+    <span style="color:blue">R</span>
+    </div>
+
+    """
+    stc.html(custom_banner)
     menu = ["Home", "Sigle Extractor", "Bulk Extractor", "About"]
     list_of_items = ["Emails", "URLS", "Phonenumbers"]
     choice = st.sidebar.selectbox("Menu", menu)
