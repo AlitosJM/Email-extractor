@@ -55,6 +55,7 @@ def main():
             with st.beta_expander("Results As Dataframe"):
                 result_df = pd.DataFrame({"Results": results})
                 st.dataframe(result_df)
+                make_downloadable(result_df, task_option)
 
     elif choice == "Bulk Extractor":
         st.subheader("Bulk Extractor")
