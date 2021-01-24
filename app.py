@@ -5,8 +5,10 @@ import neattext.functions as nfx
 import base64
 import time
 import requests
+import sqlite3
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
+conn = sqlite3.connect('emails_data.db')
 
 
 # Fxn to Download
@@ -65,7 +67,7 @@ def main():
 
     """
     stc.html(custom_banner)
-    menu = ["Home", "Sigle Extractor", "Bulk Extractor", "About"]
+    menu = ["Home", "Sigle Extractor", "Bulk Extractor", "DataStorage", "About"]
     list_of_items = ["Emails", "URLS", "Phonenumbers"]
     choice = st.sidebar.selectbox("Menu", menu)
 
@@ -74,14 +76,15 @@ def main():
 
         country_name = st.sidebar.selectbox("Country", countries_list)
         email_type = st.sidebar.selectbox("Email Type", email_extensions_list)
+        num_per_page = st.sidebar.number_input("Number of results Per Page", 10, 100, step=10)
         task_option = st.sidebar.multiselect("Task", list_of_items, default="Emails")
         search_text = st.text_input("Paste Term Here")
-        generated_query = f'{search_text} + {country_name} + email@{email_type}'
+        generated_query = f'{search_text} + {country_name} + email@{email_type}&num={num_per_page}'
         # st.write(generated_query)
         st.info("Generated Query: {}".format(generated_query))
 
         if st.button("Search & Extract"):
-            if generated_query is not None and search_text:
+            if generated_query is not None and search_text and int(num_per_page) > 9:
                 st.success("Generated Query")
                 text = fetch_query(generated_query)
                 # st.write(text)
@@ -100,7 +103,9 @@ def main():
                 with st.beta_expander("Results As DataFrame"):
                     result_df = pd.DataFrame(all_result).T
                     result_df.columns = task_option
-                    st.dataframe(result_df)
+                    result_df['Emails']
+                    # Save to DataBase as SQL with pandas
+                    st.dataframe(result_df).to_sql(name='EmailsTable', con=conn, if_exists='append')
                     make_downloadable_df(result_df)
             else:
                 st.warning("Paste Term...")
@@ -146,6 +151,10 @@ def main():
             result_df.columns = task_option
             st.dataframe(result_df)
             make_downloadable_df(result_df)
+    elif choice == 'DataStorage':
+        st.subheader("Data Storage of Emails")
+        new_df = pd.read_sql('SELECT * FROM EmailsTable', con=conn)
+        st.dataframe(new_df)
     else:
         st.subheader("About")
 
