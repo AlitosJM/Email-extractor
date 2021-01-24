@@ -103,9 +103,10 @@ def main():
                 with st.beta_expander("Results As DataFrame"):
                     result_df = pd.DataFrame(all_result).T
                     result_df.columns = task_option
-                    result_df['Emails']
+                    st.dataframe(result_df)
                     # Save to DataBase as SQL with pandas
-                    st.dataframe(result_df).to_sql(name='EmailsTable', con=conn, if_exists='append')
+                    result_df['Emails'].to_sql(name='EmailsTable', con=conn, if_exists='append')
+
                     make_downloadable_df(result_df)
             else:
                 st.warning("Paste Term...")
@@ -154,7 +155,9 @@ def main():
     elif choice == 'DataStorage':
         st.subheader("Data Storage of Emails")
         new_df = pd.read_sql('SELECT * FROM EmailsTable', con=conn)
-        st.dataframe(new_df)
+
+        with st.beta_expander("View All Emails"):
+            st.dataframe(new_df)
     else:
         st.subheader("About")
 
